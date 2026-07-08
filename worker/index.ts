@@ -17,15 +17,12 @@ export function startWorker() {
 
   setInterval(async () => {
     try {
-      const now = Date.now();
-      const allNotifications = db.getRawNotifications();
+      const oldUnreadNotifications = db.getOldUnreadNotifications(OLD_THRESHOLD_MS);
       const affectedUsers = new Set<string>();
 
-      for (const notif of allNotifications) {
-        if (!notif.isRead && now - notif.createdAt > OLD_THRESHOLD_MS) {
-          notif.isRead = true;
-          affectedUsers.add(notif.userId);
-        }
+      for (const notif of oldUnreadNotifications) {
+        await db.markAsRead(notif.id);
+        affectedUsers.add(notif.userId);
       }
 
       for (const userId of affectedUsers) {
@@ -46,13 +43,7 @@ export function startWorker() {
         );
       }
 
-      const users = db.getRawUsers();
-
-      const statistics: AppStatistics = {
-        usersCount: users.length,
-        notificationsCount: allNotifications.length,
-        unreadCount: allNotifications.filter((n) => !n.isRead).length,
-      };
+      const statistics: AppStatistics = db.getStats();
 
       try {
         await redis.set("app:statistics", JSON.stringify(statistics));

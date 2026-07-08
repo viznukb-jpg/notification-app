@@ -12,11 +12,11 @@ export function StatCard({ value, label, color = "blue" }: StatCardProps) {
   };
 
   return (
-    <div className="bg-white dark:bg-zinc-900 p-8 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm flex flex-col items-center justify-center text-center transform transition-transform hover:scale-105">
+    <div className="flex flex-col justify-center items-center bg-white dark:bg-zinc-900 shadow-sm p-8 border border-zinc-200 dark:border-zinc-800 rounded-2xl text-center hover:scale-105 transition-transform transform">
       <div className={`text-6xl font-black mb-3 ${colorStyles[color]}`}>
         {value}
       </div>
-      <div className="text-sm font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest">
+      <div className="font-bold text-zinc-500 dark:text-zinc-400 text-sm uppercase tracking-widest">
         {label}
       </div>
     </div>

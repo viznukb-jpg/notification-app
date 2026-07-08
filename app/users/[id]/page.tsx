@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { NotificationsContainer } from "@/features/users/NotificationsContainer";
+import { NotificationsContainer } from "@/features/users/components/NotificationsContainer";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/shared/ui/PageHeader";
 import { BackButton } from "@/shared/ui/BackButton";

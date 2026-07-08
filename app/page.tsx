@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { db } from "@/lib/db";
-import { UserList } from "@/features/users/UserList";
+import { UserList } from "@/features/users/components/UserList";
 import { PageHeader } from "@/shared/ui/PageHeader";
 
 export default async function HomePage() {

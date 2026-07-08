@@ -52,6 +52,21 @@ export const db = {
     return notification;
   },
 
+  getStats: () => {
+    return {
+      usersCount: users.length,
+      notificationsCount: notifications.length,
+      unreadCount: notifications.filter((n) => !n.isRead).length,
+    };
+  },
+
+  getOldUnreadNotifications: (thresholdMs: number) => {
+    const now = Date.now();
+    return notifications.filter(
+      (n) => !n.isRead && now - n.createdAt > thresholdMs,
+    );
+  },
+
   getRawNotifications: () => notifications,
   getRawUsers: () => users,
 };
