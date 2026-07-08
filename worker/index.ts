@@ -46,6 +46,7 @@ export function startWorker() {
       }
 
       const users = db.getRawUsers();
+
       const stats = {
         usersCount: users.length,
         notificationsCount: allNotifications.length,
