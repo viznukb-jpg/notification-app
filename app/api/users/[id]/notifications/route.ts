@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { redis } from "@/lib/redis";
 import { withErrorHandler } from "@/lib/api-handler";
 import { AppError } from "@/lib/errors";
+import { CACHE_TTL_SECONDS } from "@/shared/config/constants";
 
 export const GET = withErrorHandler(
   async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
@@ -23,7 +24,7 @@ export const GET = withErrorHandler(
     const notifications = await db.getUserNotifications(id);
     
     try {
-      await redis.set(cacheKey, JSON.stringify(notifications), "EX", 30);
+      await redis.set(cacheKey, JSON.stringify(notifications), "EX", CACHE_TTL_SECONDS);
     } catch (error) {
       console.error("[Redis SET Error]:", error);
     }
