@@ -22,6 +22,10 @@ export const users: User[] = globalForDb.users || [
   { id: "1", name: "Ivan" },
   { id: "2", name: "Maria" },
   { id: "3", name: "Oleksii" },
+  { id: "4", name: "Oksana" },
+  { id: "5", name: "Dmytro" },
+  { id: "6", name: "Kateryna" },
+  { id: "7", name: "Andrii" },
 ];
 if (!globalForDb.users) globalForDb.users = users;
 
