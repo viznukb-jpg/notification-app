@@ -1,7 +1,8 @@
 import { db } from "@/lib/db";
 import { NotificationsContainer } from "@/features/users/NotificationsContainer";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { PageHeader } from "@/shared/ui/PageHeader";
+import { BackButton } from "@/shared/ui/BackButton";
 
 export default async function UserPage({
   params,
@@ -18,18 +19,9 @@ export default async function UserPage({
 
   return (
     <main className="flex-1 mx-auto p-8 pt-16 w-full max-w-4xl">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <Link
-            href="/"
-            className="inline-block mb-2 text-blue-600 dark:text-blue-400 text-sm hover:underline"
-          >
-            &larr; Back to users
-          </Link>
-          <h1 className="font-extrabold text-zinc-900 dark:text-white text-3xl sm:text-4xl tracking-tight">
-            {user.name}&apos;s Notifications
-          </h1>
-        </div>
+      <div>
+        <BackButton href="/" label="Back to users" />
+        <PageHeader title={`${user.name}'s Notifications`} centered={false} />
       </div>
 
       <NotificationsContainer userId={user.id} />

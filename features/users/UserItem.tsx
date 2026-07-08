@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { User } from "@/lib/db";
+import { User } from "@/shared/types";
 
 interface UserItemProps {
   user: User;

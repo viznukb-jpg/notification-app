@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Notification } from "@/lib/db";
+import { Notification } from "@/shared/types";
 import { NotificationForm } from "./NotificationForm";
 import { NotificationsList } from "./NotificationsList";
 

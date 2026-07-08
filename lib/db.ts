@@ -1,17 +1,6 @@
 import { randomUUID } from "crypto";
 
-export type User = {
-  id: string;
-  name: string;
-};
-
-export type Notification = {
-  id: string;
-  userId: string;
-  title: string;
-  isRead: boolean;
-  createdAt: number;
-};
+import { User, Notification } from "@/shared/types";
 
 const globalForDb = globalThis as unknown as {
   users: User[];

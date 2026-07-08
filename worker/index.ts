@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { AppStatistics } from "@/shared/types";
 import { redis } from "@/lib/redis";
 import { RUN_INTERVAL_MS, OLD_THRESHOLD_MS } from "@/shared/config/constants";
 
@@ -47,14 +48,14 @@ export function startWorker() {
 
       const users = db.getRawUsers();
 
-      const stats = {
+      const statistics: AppStatistics = {
         usersCount: users.length,
         notificationsCount: allNotifications.length,
         unreadCount: allNotifications.filter((n) => !n.isRead).length,
       };
 
       try {
-        await redis.set("app:statistics", JSON.stringify(stats));
+        await redis.set("app:statistics", JSON.stringify(statistics));
       } catch (error) {
         console.error("[Worker] Failed to save stats to Redis", error);
       }

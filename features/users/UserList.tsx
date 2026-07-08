@@ -1,4 +1,4 @@
-import { User } from "@/lib/db";
+import { User } from "@/shared/types";
 import { UserItem } from "./UserItem";
 
 interface UserListProps {

@@ -1,4 +1,4 @@
-import { Notification } from "@/lib/db";
+import { Notification } from "@/shared/types";
 import { NotificationListItem } from "./NotificationListItem";
 
 interface NotificationsListProps {
