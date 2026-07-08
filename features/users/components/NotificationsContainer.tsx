@@ -70,7 +70,7 @@ export function NotificationsContainer({
       <NotificationsList
         notifications={notifications || []}
         onMarkRead={(id) => markReadMutation.mutate(id)}
-        isMarkingRead={markReadMutation.isPending}
+        pendingMarkReadId={markReadMutation.isPending ? markReadMutation.variables : null}
       />
     </div>
   );

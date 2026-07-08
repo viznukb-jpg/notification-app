@@ -13,7 +13,10 @@ export default async function HomePage() {
         description="Manage and view notifications across all registered users in the platform. Select a profile below to continue."
         centered={true}
       >
-        <Link href="/statistics" className="px-6 py-2 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-medium rounded-lg hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-colors">
+        <Link
+          href="/statistics"
+          className="bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 px-6 py-2 rounded-lg font-medium text-white dark:text-zinc-900 transition-colors"
+        >
           View Statistics
         </Link>
       </PageHeader>

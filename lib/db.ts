@@ -7,7 +7,7 @@ const globalForDb = globalThis as unknown as {
   notifications: Notification[];
 };
 
-export const users: User[] = globalForDb.users || [
+const users: User[] = globalForDb.users || [
   { id: "1", name: "Ivan" },
   { id: "2", name: "Maria" },
   { id: "3", name: "Oleksii" },
@@ -16,9 +16,10 @@ export const users: User[] = globalForDb.users || [
   { id: "6", name: "Kateryna" },
   { id: "7", name: "Andrii" },
 ];
+
 if (!globalForDb.users) globalForDb.users = users;
 
-export const notifications: Notification[] = globalForDb.notifications || [];
+const notifications: Notification[] = globalForDb.notifications || [];
 if (!globalForDb.notifications) globalForDb.notifications = notifications;
 
 export const db = {

@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { AppStatistics } from "@/shared/types";
 import { redis } from "@/lib/redis";
-import { RUN_INTERVAL_MS, OLD_THRESHOLD_MS } from "@/shared/config/constants";
+import { RUN_INTERVAL_MS, OLD_THRESHOLD_MS, CACHE_TTL_SECONDS } from "@/shared/config/constants";
 
 export function startWorker() {
   const globalForWorker = globalThis as unknown as {
@@ -46,7 +46,12 @@ export function startWorker() {
       const statistics: AppStatistics = db.getStats();
 
       try {
-        await redis.set("app:statistics", JSON.stringify(statistics));
+        await redis.set(
+          "app:statistics",
+          JSON.stringify(statistics),
+          "EX",
+          CACHE_TTL_SECONDS,
+        );
       } catch (error) {
         console.error("[Worker] Failed to save stats to Redis", error);
       }

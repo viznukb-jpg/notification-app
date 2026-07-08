@@ -9,10 +9,11 @@ export const GET = withErrorHandler(
   async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
     const { id } = await params;
     const cacheKey = `user:${id}:notifications`;
-    
+
     let cached = null;
     try {
       cached = await redis.get(cacheKey);
+      console.log(cached && cached[0]);
     } catch (error) {
       console.error("[Redis GET Error]:", error);
     }
@@ -22,21 +23,26 @@ export const GET = withErrorHandler(
     }
 
     const notifications = await db.getUserNotifications(id);
-    
+
     try {
-      await redis.set(cacheKey, JSON.stringify(notifications), "EX", CACHE_TTL_SECONDS);
+      await redis.set(
+        cacheKey,
+        JSON.stringify(notifications),
+        "EX",
+        CACHE_TTL_SECONDS,
+      );
     } catch (error) {
       console.error("[Redis SET Error]:", error);
     }
 
     return NextResponse.json(notifications);
-  }
+  },
 );
 
 export const POST = withErrorHandler(
   async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
     const { id } = await params;
-    
+
     let body;
     try {
       body = await request.json();
@@ -49,7 +55,7 @@ export const POST = withErrorHandler(
     }
 
     const notification = await db.createNotification(id, body.title);
-    
+
     const cacheKey = `user:${id}:notifications`;
     try {
       await redis.del(cacheKey);
@@ -58,5 +64,5 @@ export const POST = withErrorHandler(
     }
 
     return NextResponse.json(notification, { status: 201 });
-  }
+  },
 );

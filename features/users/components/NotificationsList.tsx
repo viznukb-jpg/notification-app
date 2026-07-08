@@ -4,13 +4,13 @@ import { NotificationListItem } from "./NotificationListItem";
 interface NotificationsListProps {
   notifications: Notification[];
   onMarkRead: (id: string) => void;
-  isMarkingRead: boolean;
+  pendingMarkReadId: string | null;
 }
 
 export function NotificationsList({
   notifications,
   onMarkRead,
-  isMarkingRead,
+  pendingMarkReadId,
 }: NotificationsListProps) {
   return (
     <div>
@@ -26,7 +26,7 @@ export function NotificationsList({
               key={notif.id}
               notification={notif}
               onMarkRead={onMarkRead}
-              isPending={isMarkingRead}
+              isPending={pendingMarkReadId === notif.id}
             />
           ))}
         </div>
