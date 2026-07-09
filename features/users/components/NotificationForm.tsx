@@ -1,20 +1,24 @@
 "use client";
 
-import { useState } from "react";
-
 interface NotificationFormProps {
   onSubmit: (title: string) => void;
   isPending: boolean;
+  isError: boolean;
 }
 
-export function NotificationForm({ onSubmit, isPending }: NotificationFormProps) {
-  const [newTitle, setNewTitle] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
+export function NotificationForm({
+  onSubmit,
+  isPending,
+  isError,
+}: NotificationFormProps) {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (newTitle.trim()) {
-      onSubmit(newTitle.trim());
-      setNewTitle("");
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const title = (formData.get("title") as string)?.trim();
+    if (title && !isPending) {
+      onSubmit(title);
+      form.reset();
     }
   };
 
@@ -24,20 +28,24 @@ export function NotificationForm({ onSubmit, isPending }: NotificationFormProps)
       <form className="flex gap-3" onSubmit={handleSubmit}>
         <input
           type="text"
-          value={newTitle}
-          onChange={(e) => setNewTitle(e.target.value)}
+          name="title"
           placeholder="e.g., Your transfer has been completed"
           className="flex-1 px-4 py-2 border border-zinc-300 dark:border-zinc-700 rounded-lg bg-transparent text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           disabled={isPending}
         />
         <button
           type="submit"
-          disabled={!newTitle.trim() || isPending}
+          disabled={isPending}
           className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {isPending ? "Sending..." : "Send"}
         </button>
       </form>
+      {isError && (
+        <p className="mt-3 text-red-500 text-sm">
+          Failed to send notification. Please try again.
+        </p>
+      )}
     </div>
   );
 }

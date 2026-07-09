@@ -7,7 +7,7 @@ import { CACHE_TTL_SECONDS } from "@/shared/config/constants";
 import { z } from "zod";
 
 const createNotificationSchema = z.object({
-  title: z.string().min(1, "Title is required"),
+  title: z.string().min(1, "Title is required").max(1000, "Title is too long"),
 });
 
 export const GET = withErrorHandler(
@@ -61,7 +61,7 @@ export const POST = withErrorHandler(
 
     const parseResult = createNotificationSchema.safeParse(body);
     if (!parseResult.success) {
-      throw new AppError(parseResult.error.errors[0].message, 400);
+      throw new AppError(parseResult.error.issues[0].message, 400);
     }
 
     const { title } = parseResult.data;

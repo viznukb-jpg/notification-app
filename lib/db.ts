@@ -74,7 +74,4 @@ export const db = {
       (n) => !n.isRead && now - n.createdAt > thresholdMs,
     );
   },
-
-  getRawNotifications: () => notifications,
-  getRawUsers: () => users,
 };

@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Notification } from "@/shared/types";
 import { NotificationForm } from "./NotificationForm";
 import { NotificationsList } from "./NotificationsList";
+import { RUN_INTERVAL_MS } from "@/shared/config/constants";
 
 import {
   getUserNotifications,
@@ -27,6 +28,7 @@ export function NotificationsContainer({
   } = useQuery<Notification[]>({
     queryKey: ["notifications", userId],
     queryFn: () => getUserNotifications(userId),
+    refetchInterval: RUN_INTERVAL_MS,
   });
 
   const createMutation = useMutation({
@@ -65,13 +67,22 @@ export function NotificationsContainer({
       <NotificationForm
         onSubmit={(title) => createMutation.mutate(title)}
         isPending={createMutation.isPending}
+        isError={createMutation.isError}
       />
 
       <NotificationsList
         notifications={notifications || []}
         onMarkRead={(id) => markReadMutation.mutate(id)}
-        pendingMarkReadId={markReadMutation.isPending ? markReadMutation.variables : null}
+        pendingMarkReadId={
+          markReadMutation.isPending ? markReadMutation.variables : null
+        }
       />
+
+      {markReadMutation.isError && (
+        <p className="text-red-500 text-sm">
+          Failed to mark notification as read. Please try again.
+        </p>
+      )}
     </div>
   );
 }
