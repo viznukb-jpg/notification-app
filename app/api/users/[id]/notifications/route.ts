@@ -4,16 +4,25 @@ import { redis } from "@/lib/redis";
 import { withErrorHandler } from "@/lib/api-handler";
 import { AppError } from "@/lib/errors";
 import { CACHE_TTL_SECONDS } from "@/shared/config/constants";
+import { z } from "zod";
+
+const createNotificationSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+});
 
 export const GET = withErrorHandler(
   async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
     const { id } = await params;
+
+    if (!(await db.userExists(id))) {
+      throw new AppError("User not found", 404);
+    }
+
     const cacheKey = `user:${id}:notifications`;
 
     let cached = null;
     try {
       cached = await redis.get(cacheKey);
-      console.log(cached && cached[0]);
     } catch (error) {
       console.error("[Redis GET Error]:", error);
     }
@@ -50,11 +59,17 @@ export const POST = withErrorHandler(
       throw new AppError("Invalid JSON body", 400);
     }
 
-    if (!body.title) {
-      throw new AppError("Title is required", 400);
+    const parseResult = createNotificationSchema.safeParse(body);
+    if (!parseResult.success) {
+      throw new AppError(parseResult.error.errors[0].message, 400);
     }
 
-    const notification = await db.createNotification(id, body.title);
+    const { title } = parseResult.data;
+
+    const notification = await db.createNotification(id, title);
+    if (!notification) {
+      throw new AppError("User not found", 404);
+    }
 
     const cacheKey = `user:${id}:notifications`;
     try {

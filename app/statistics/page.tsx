@@ -1,13 +1,10 @@
 import { PageHeader } from "@/shared/ui/PageHeader";
 import { BackButton } from "@/shared/ui/BackButton";
-import { StatCard } from "@/features/statistics/components/StatCard";
 import { RUN_INTERVAL_MS } from "@/shared/config/constants";
+import { StatisticsContainer } from "@/features/statistics/components/StatisticsContainer";
+import { StatisticsRefresher } from "@/features/statistics/components/StatisticsRefresher";
 
-import { getAppStatistics } from "@/features/statistics/services";
-
-export default async function StatisticsPage() {
-  const stats = await getAppStatistics();
-
+export default function StatisticsPage() {
   return (
     <main className="flex-1 mx-auto p-8 pt-16 w-full max-w-5xl">
       <div className="flex flex-col items-center">
@@ -19,23 +16,8 @@ export default async function StatisticsPage() {
         />
       </div>
 
-      <div className="gap-6 grid sm:grid-cols-3 mx-auto max-w-4xl">
-        <StatCard
-          value={stats?.usersCount || 0}
-          label="Total Users"
-          color="blue"
-        />
-        <StatCard
-          value={stats?.notificationsCount || 0}
-          label="All Notifications"
-          color="blue"
-        />
-        <StatCard
-          value={stats?.unreadCount || 0}
-          label="Unread"
-          color="amber"
-        />
-      </div>
+      <StatisticsRefresher />
+      <StatisticsContainer />
     </main>
   );
 }

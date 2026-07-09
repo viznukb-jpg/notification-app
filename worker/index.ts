@@ -1,7 +1,11 @@
 import { db } from "@/lib/db";
 import { AppStatistics } from "@/shared/types";
 import { redis } from "@/lib/redis";
-import { RUN_INTERVAL_MS, OLD_THRESHOLD_MS, CACHE_TTL_SECONDS } from "@/shared/config/constants";
+import {
+  RUN_INTERVAL_MS,
+  OLD_THRESHOLD_MS,
+  CACHE_TTL_SECONDS,
+} from "@/shared/config/constants";
 
 export function startWorker() {
   const globalForWorker = globalThis as unknown as {
@@ -15,13 +19,14 @@ export function startWorker() {
 
   console.log("[Worker] Started background worker");
 
-  setInterval(async () => {
+  const runWorkerTask = async () => {
     try {
-      const oldUnreadNotifications = db.getOldUnreadNotifications(OLD_THRESHOLD_MS);
+      const oldUnreadNotifications =
+        db.getOldUnreadNotifications(OLD_THRESHOLD_MS);
       const affectedUsers = new Set<string>();
 
       for (const notif of oldUnreadNotifications) {
-        await db.markAsRead(notif.id);
+        await db.markAsRead(notif.id, notif.userId);
         affectedUsers.add(notif.userId);
       }
 
@@ -58,5 +63,8 @@ export function startWorker() {
     } catch (error) {
       console.error("[Worker] Error during execution", error);
     }
-  }, RUN_INTERVAL_MS);
+  };
+
+  runWorkerTask();
+  setInterval(runWorkerTask, RUN_INTERVAL_MS);
 }

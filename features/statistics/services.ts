@@ -1,18 +1,14 @@
-import { redis } from "@/lib/redis";
 import { AppStatistics } from "@/shared/types";
 
 export async function getAppStatistics(): Promise<AppStatistics | null> {
   try {
-    const statsJson = await redis.get("app:statistics");
-    if (statsJson) {
-      return JSON.parse(statsJson) as AppStatistics;
+    const res = await fetch("/api/statistics");
+    if (res.ok) {
+      return res.json();
     }
   } catch (error) {
-    console.error(
-      "[Statistics Service] Failed to fetch stats from Redis",
-      error,
-    );
+    console.error("[Statistics Service] Failed to fetch stats from API", error);
   }
-
+  
   return null;
 }

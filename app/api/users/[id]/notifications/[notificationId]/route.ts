@@ -10,7 +10,7 @@ export const PATCH = withErrorHandler(
     { params }: { params: Promise<{ id: string; notificationId: string }> },
   ) => {
     const { id, notificationId } = await params;
-    const updatedNotification = await db.markAsRead(notificationId);
+    const updatedNotification = await db.markAsRead(notificationId, id);
 
     if (!updatedNotification) {
       throw new AppError("Notification not found", 404);

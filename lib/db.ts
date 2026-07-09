@@ -33,7 +33,13 @@ export const db = {
       .sort((a, b) => b.createdAt - a.createdAt);
   },
 
+  userExists: async (userId: string) => {
+    return users.some((u) => u.id === userId);
+  },
+
   createNotification: async (userId: string, title: string) => {
+    if (!users.some((u) => u.id === userId)) return null;
+
     const newNotification: Notification = {
       id: randomUUID(),
       userId,
@@ -45,12 +51,13 @@ export const db = {
     return newNotification;
   },
 
-  markAsRead: async (notificationId: string) => {
+  markAsRead: async (notificationId: string, userId?: string) => {
     const notification = notifications.find((n) => n.id === notificationId);
-    if (notification) {
+    if (notification && (!userId || notification.userId === userId)) {
       notification.isRead = true;
+      return notification;
     }
-    return notification;
+    return null;
   },
 
   getStats: () => {
